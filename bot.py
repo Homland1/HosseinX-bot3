@@ -210,9 +210,9 @@ def handle_update(token, update):
                 
                 if command == '/start':
                     welcome_message = (
-                        f"Hello {first_name}! 👋\n\n"
-                        f"Welcome to HosseinX-bot3. I'm here to assist you.\n\n"
-                        f"Use /help to see available commands or open our Mini App below."
+                        f"به بازی حسین ایکس بات ۳ خوش آمدید {first_name}! 👋\n\n"
+                        f"من اینجا هستم تا به شما کمک کنم.\n\n"
+                        f"برای دیدن دستورات از /help استفاده کنید یا مینی اپ را از دکمه زیر باز کنید."
                     )
                     
                     # Create a Mini App button
@@ -232,7 +232,7 @@ def handle_update(token, update):
                     else:
                         webapp_url = f"https://{replit_domain}/telegram-miniapp/index.html?user_id={user_id}"
                     
-                    keyboard = create_webapp_button(webapp_url, "Open HosseinX-bot3 Mini App")
+                    keyboard = create_webapp_button(webapp_url, "باز کردن مینی اپ حسین ایکس بات")
                     
                     # Send welcome message with Mini App button
                     send_telegram_message(token, chat_id, welcome_message, keyboard)
@@ -249,10 +249,10 @@ def handle_update(token, update):
                 
                 elif command == '/help':
                     help_text = (
-                        "Here are the available commands:\n\n"
-                        "/start - Start the bot\n"
-                        "/help - Show this help message\n"
-                        "/about - About this bot\n"
+                        "دستورات قابل استفاده:\n\n"
+                        "/start - شروع مجدد ربات\n"
+                        "/help - نمایش این پیام راهنما\n"
+                        "/about - درباره این ربات\n"
                     )
                     send_telegram_message(token, chat_id, help_text)
                     
@@ -268,9 +268,9 @@ def handle_update(token, update):
                 
                 elif command == '/about':
                     about_text = (
-                        "🤖 HosseinX-bot3\n\n"
-                        "A Telegram bot created with Python.\n"
-                        "Developed as a sample project."
+                        "🤖 حسین ایکس بات ۳\n\n"
+                        "یک ربات تلگرام ساخته شده با پایتون.\n"
+                        "توسعه داده شده برای سرگرمی و بازی."
                     )
                     send_telegram_message(token, chat_id, about_text)
                     
@@ -286,7 +286,7 @@ def handle_update(token, update):
             
             else:
                 # Echo back for regular messages
-                response = f"You said: {text}"
+                response = f"شما گفتید: {text}"
                 send_telegram_message(token, chat_id, response)
                 
                 # Log the bot's response
