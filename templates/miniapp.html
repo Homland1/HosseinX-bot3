@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}HosseinX-bot3 Mini App{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mini-app-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .mini-app-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .user-info {
+        background-color: var(--bs-dark);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border: 1px solid var(--bs-secondary);
+    }
+    
+    .feature-card {
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .telegram-btn {
+        background-color: #0088cc;
+        border-color: #0088cc;
+    }
+    
+    .telegram-btn:hover {
+        background-color: #006699;
+        border-color: #006699;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mini-app-container">
+    <div class="mini-app-header">
+        <i class="fas fa-robot fa-4x mb-3 text-info"></i>
+        <h1 class="display-5">HosseinX-bot3 Mini App</h1>
+        <p class="lead">Welcome to the Telegram Mini App for HosseinX-bot3</p>
+    </div>
+    
+    {% if user %}
+    <div class="user-info">
+        <h3>Hello, {{ user.first_name }}{% if user.last_name %} {{ user.last_name }}{% endif %}!</h3>
+        <p>Telegram ID: {{ user.telegram_id }}</p>
+        {% if user.username %}<p>Username: @{{ user.username }}</p>{% endif %}
+        <p>Joined: {{ user.joined_at.strftime('%Y-%m-%d') }}</p>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        User information not available. Please open this Mini App from the Telegram bot.
+    </div>
+    {% endif %}
+    
+    <h3 class="mb-4">Available Features</h3>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-comment-dots fa-3x mb-3 text-primary"></i>
+                    <h5>Chat with Bot</h5>
+                    <p>Return to the chat to interact with the bot</p>
+                    <button class="btn btn-sm btn-outline-primary telegram-btn" onclick="window.Telegram.WebApp.close()">
+                        <i class="fas fa-chevron-left me-2"></i>Back to Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-history fa-3x mb-3 text-info"></i>
+                    <h5>Message History</h5>
+                    <p>View your past conversations</p>
+                    <button class="btn btn-sm btn-outline-info" id="show-history">
+                        <i class="fas fa-eye me-2"></i>View History
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-cog fa-3x mb-3 text-warning"></i>
+                    <h5>Preferences</h5>
+                    <p>Customize your bot experience</p>
+                    <button class="btn btn-sm btn-outline-warning" id="show-preferences">
+                        <i class="fas fa-sliders-h me-2"></i>Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-question-circle fa-3x mb-3 text-success"></i>
+                    <h5>Help</h5>
+                    <p>Learn how to use the bot</p>
+                    <button class="btn btn-sm btn-outline-success" id="show-help">
+                        <i class="fas fa-book me-2"></i>Guide
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="message-history mt-4" id="message-history" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Message History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% if user %}
+                        {% set messages = user.messages[:10] if user.messages else [] %}
+                        {% for message in messages %}
+                            <div class="list-group-item {% if message.is_from_user %}bg-dark{% else %}bg-primary bg-opacity-25{% endif %}">
+                                <div class="d-flex justify-content-between">
+                                    <span class="badge {% if message.is_from_user %}bg-secondary{% else %}bg-info{% endif %}">
+                                        {% if message.is_from_user %}You{% else %}Bot{% endif %}
+                                    </span>
+                                    <small class="text-muted">{{ message.timestamp.strftime('%H:%M:%S') }}</small>
+                                </div>
+                                <p class="mt-2 mb-0">{{ message.message_text }}</p>
+                            </div>
+                        {% else %}
+                            <div class="list-group-item text-center">No messages found</div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item text-center">User information not available</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Telegram Web App
+        window.Telegram.WebApp.ready();
+        
+        // Change the color theme
+        window.Telegram.WebApp.setHeaderColor('secondary_bg_color');
+        
+        // Expand the Web App to the maximum height
+        window.Telegram.WebApp.expand();
+        
+        // Add event listeners to buttons
+        document.getElementById('show-history').addEventListener('click', function() {
+            const history = document.getElementById('message-history');
+            if (history.style.display === 'none') {
+                history.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-eye-slash me-2"></i>Hide History';
+                // Scroll to the history section
+                history.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                history.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-eye me-2"></i>View History';
+            }
+        });
+        
+        document.getElementById('show-preferences').addEventListener('click', function() {
+            window.Telegram.WebApp.showAlert('Preferences feature coming soon!');
+        });
+        
+        document.getElementById('show-help').addEventListener('click', function() {
+            window.Telegram.WebApp.showAlert('Help guide coming soon!');
+        });
+    });
+</script>
+{% endblock %}

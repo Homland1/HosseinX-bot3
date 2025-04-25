@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
+
+<div class="row">
+    <!-- Bot Status Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-robot me-2"></i>Bot Status</h5>
+                {% if bot_status.is_running %}
+                <span class="badge bg-success">Running</span>
+                {% else %}
+                <span class="badge bg-danger">Stopped</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-center mb-4">
+                    {% if bot_status.is_running %}
+                    <div class="text-center">
+                        <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
+                        <h4>Bot is active and responding</h4>
+                        <p class="text-muted">The Telegram bot is running and ready to interact with users</p>
+                    </div>
+                    {% else %}
+                    <div class="text-center">
+                        <i class="fas fa-times-circle fa-5x text-danger mb-3"></i>
+                        <h4>Bot is currently inactive</h4>
+                        <p class="text-muted">Start the bot to begin interactions with Telegram users</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex justify-content-center">
+                    {% if bot_status.is_running %}
+                    <a href="{{ url_for('stop_bot_route') }}" class="btn btn-danger">
+                        <i class="fas fa-stop-circle me-2"></i>Stop Bot
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('start_bot_route') }}" class="btn btn-success">
+                        <i class="fas fa-play-circle me-2"></i>Start Bot
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Logs Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Logs</h5>
+                <a href="{{ url_for('logs') }}" class="btn btn-sm btn-outline-secondary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Level</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td class="text-nowrap">{{ log.timestamp.strftime('%H:%M:%S') }}</td>
+                                <td>
+                                    {% if log.level == 'INFO' %}
+                                    <span class="badge bg-info">{{ log.level }}</span>
+                                    {% elif log.level == 'WARNING' %}
+                                    <span class="badge bg-warning">{{ log.level }}</span>
+                                    {% elif log.level == 'ERROR' %}
+                                    <span class="badge bg-danger">{{ log.level }}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ log.level }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.message }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">No logs found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Bot Instructions Card -->
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Bot Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-link me-2"></i>Your Bot Link</h5>
+                    <p>Users can access your bot at: <a href="https://t.me/HoseinX_bot" target="_blank" class="alert-link">https://t.me/HoseinX_bot</a></p>
+                </div>
+                
+                <h5>Available Commands</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/start</code></td>
+                                <td>Start the bot interaction</td>
+                            </tr>
+                            <tr>
+                                <td><code>/help</code></td>
+                                <td>Display help information</td>
+                            </tr>
+                            <tr>
+                                <td><code>/about</code></td>
+                                <td>Display information about the bot</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

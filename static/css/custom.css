@@ -1,0 +1,84 @@
+/* Custom styles for HosseinX-bot3 Admin Panel */
+
+/* Add some extra padding to the main container */
+.container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Customize cards */
+.card {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Improve table readability in dark theme */
+.table {
+    color: inherit;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Better button spacing */
+.btn {
+    margin-right: 0.25rem;
+}
+
+.btn:last-child {
+    margin-right: 0;
+}
+
+/* Style the footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Make sure content doesn't go behind footer */
+body {
+    padding-bottom: 60px;
+    min-height: 100vh;
+}
+
+/* Improve badge contrast */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Dashboard status icons */
+.fa-5x {
+    margin: 1rem 0;
+}
+
+/* Improve form control visibility in dark mode */
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    color: inherit;
+}
+
+/* Custom section for token display */
+.token-display {
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    word-break: break-all;
+}

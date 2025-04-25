@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-cog me-2"></i>Bot Settings</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-wrench me-2"></i>Configuration</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('settings') }}">
+                    <div class="mb-3">
+                        <label for="telegram_token" class="form-label">Telegram Bot Token</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input type="text" class="form-control" id="telegram_token" name="telegram_token" 
+                                value="{{ settings.telegram_token or '' }}" 
+                                placeholder="Enter your Telegram bot token">
+                        </div>
+                        <div class="form-text">The token provided by BotFather on Telegram</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Help & Information</h5>
+            </div>
+            <div class="card-body">
+                <h5>How to get a Telegram Bot Token</h5>
+                <ol>
+                    <li>Start a chat with <a href="https://t.me/BotFather" target="_blank">@BotFather</a> on Telegram</li>
+                    <li>Send the command <code>/newbot</code></li>
+                    <li>Follow the instructions to name your bot</li>
+                    <li>BotFather will give you a token that looks like <code>123456789:ABCDefGhIJKlmNoPQRsTUVwxyZ</code></li>
+                    <li>Copy this token and paste it in the field above</li>
+                </ol>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Important:</strong> Keep your token secure! Anyone with your token can control your bot.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Current Configuration</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Bot Status:</strong>
+                    <span id="bot-status-badge" class="badge bg-secondary">Checking...</span>
+                </p>
+                <p><strong>Bot Username:</strong> @HoseinX_bot</p>
+                <p><strong>Admin Interface:</strong> Running on port 5000</p>
+                
+                <hr>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                    <a href="{{ url_for('logs') }}" class="btn btn-outline-info">
+                        <i class="fas fa-list me-2"></i>View Logs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Fetch bot status to update the status badge
+document.addEventListener('DOMContentLoaded', function() {
+    // This would typically be an AJAX call to a status endpoint
+    // For now, we'll simulate it with a timeout
+    setTimeout(function() {
+        const botStatusBadge = document.getElementById('bot-status-badge');
+        // This is just a placeholder - in a real app, you'd fetch the actual status
+        fetch('/bot/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.is_running) {
+                    botStatusBadge.className = 'badge bg-success';
+                    botStatusBadge.textContent = 'Running';
+                } else {
+                    botStatusBadge.className = 'badge bg-danger';
+                    botStatusBadge.textContent = 'Stopped';
+                }
+            })
+            .catch(error => {
+                botStatusBadge.className = 'badge bg-danger';
+                botStatusBadge.textContent = 'Stopped';
+            });
+    }, 500);
+});
+</script>
+{% endblock %}

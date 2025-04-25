@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Logs{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-list me-2"></i>System Logs</h1>
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Bot Activity Logs</h5>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh-logs">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" id="clear-logs">
+                <i class="fas fa-trash-alt me-1"></i> Clear
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Timestamp</th>
+                        <th>Level</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs.items %}
+                    <tr>
+                        <td>{{ log.id }}</td>
+                        <td class="text-nowrap">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            {% if log.level == 'INFO' %}
+                            <span class="badge bg-info">{{ log.level }}</span>
+                            {% elif log.level == 'WARNING' %}
+                            <span class="badge bg-warning">{{ log.level }}</span>
+                            {% elif log.level == 'ERROR' %}
+                            <span class="badge bg-danger">{{ log.level }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ log.level }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.message }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No logs found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <nav aria-label="Log navigation">
+            <ul class="pagination justify-content-center mb-0">
+                {% if logs.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('logs', page=logs.prev_num) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == logs.page %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('logs', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if logs.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('logs', page=logs.next_num) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Logs</h5>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('logs') }}" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="level" class="form-label">Log Level</label>
+                    <select class="form-select" id="level" name="level">
+                        <option value="">All Levels</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARNING">WARNING</option>
+                        <option value="ERROR">ERROR</option>
+                        <option value="DEBUG">DEBUG</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="date_from" class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="date_from" name="date_from">
+                </div>
+                <div class="col-md-4">
+                    <label for="date_to" class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="date_to" name="date_to">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter me-2"></i>Apply Filters
+                    </button>
+                    <a href="{{ url_for('logs') }}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Refresh logs button
+    const refreshBtn = document.getElementById('refresh-logs');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            window.location.reload();
+        });
+    }
+    
+    // Clear logs functionality would typically send a POST request to clear logs
+    const clearBtn = document.getElementById('clear-logs');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all logs? This action cannot be undone.')) {
+                // This would typically be an AJAX call to a clear logs endpoint
+                alert('Logs clearing functionality would be implemented here');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
