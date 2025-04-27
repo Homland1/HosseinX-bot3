@@ -1,1 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نسخه وب HosseinX</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #333333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            direction: rtl;
+        }
 
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            background-color: #2196F3;
+            color: white;
+            font-size: 40px;
+            line-height: 80px;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .box {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 200px;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* استایل‌های راهنمای متنی */
+        .tooltip {
+            position: absolute;
+            visibility: hidden;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            width: 200px;
+            font-size: 14px;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .help-icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FF9800;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .help-icon:hover {
+            transform: scale(1.2);
+            background-color: #F57C00;
+        }
+
+        .tooltip.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip.top {
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+        
+        .tooltip.top.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .tooltip.bottom {
+            top: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        
+        .tooltip.bottom.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* انیمیشن راهنما */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s;
+        }
+
+        .tutorial-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tutorial-content {
+            max-width: 80%;
+            background-color: rgba(33, 150, 243, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tutorial-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .tutorial-btn:hover {
+            background-color: #45a049;
+        }
+
+        .tutorial-steps {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .step-dot.active {
+            background-color: white;
+        }
+
+        /* دکمه راهنما */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #FF9800;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            background-color: #F57C00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>نسخه وب HosseinX</h1>
+        
+        <div class="card" id="gameCard">
+            🎮
+            <div class="help-icon" id="cardHelpIcon">?</div>
+            <div class="tooltip top" id="cardTooltip">این آیکون بازی است که با کلیک روی آن می‌توانید بازی را شروع کنید.</div>
+        </div>
+        
+        <div class="box" id="infoBox">
+            این یک باکس سبز رنگ است
+            <div class="help-icon" id="boxHelpIcon">?</div>
+            <div class="tooltip bottom" id="boxTooltip">این باکس اطلاعات مربوط به بازی و امتیازات شما را نمایش می‌دهد.</div>
+        </div>
+        
+        <a href="app.html" class="button">رفتن به نسخه مینی‌اپ</a>
+        
+        <div class="footer">
+            این صفحه در مرورگر خارجی نمایش داده می‌شود (نسخه وب)
+        </div>
+    </div>
+
+    <!-- دکمه راهنمای کلی -->
+    <div class="help-button" id="mainHelpButton">?</div>
+
+    <!-- بخش راهنمای گام به گام -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-content" id="tutorialContent">
+            <h2>به نسخه وب HosseinX خوش آمدید!</h2>
+            <p>این راهنما به شما کمک می‌کند تا با قابلیت‌های اپلیکیشن آشنا شوید.</p>
+        </div>
+        <div class="tutorial-steps" id="tutorialSteps">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+        </div>
+        <button class="tutorial-btn" id="nextTutorialBtn">بعدی</button>
+        <button class="tutorial-btn" id="skipTutorialBtn">رد کردن</button>
+    </div>
+
+    <script>
+        console.log("🌐 در حال اجرا در نسخه وب");
+        console.log("📊 اطلاعات مرورگر:", navigator.userAgent);
+        
+        // -------------------- کد راهنمای متنی با انیمیشن --------------------
+
+        // متغیرها و عناصر DOM
+        const helpIcons = document.querySelectorAll('.help-icon');
+        const tooltips = document.querySelectorAll('.tooltip');
+        const cardHelpIcon = document.getElementById('cardHelpIcon');
+        const boxHelpIcon = document.getElementById('boxHelpIcon');
+        const cardTooltip = document.getElementById('cardTooltip');
+        const boxTooltip = document.getElementById('boxTooltip');
+        const mainHelpButton = document.getElementById('mainHelpButton');
+        const tutorialOverlay = document.getElementById('tutorialOverlay');
+        const tutorialContent = document.getElementById('tutorialContent');
+        const tutorialSteps = document.getElementById('tutorialSteps');
+        const nextTutorialBtn = document.getElementById('nextTutorialBtn');
+        const skipTutorialBtn = document.getElementById('skipTutorialBtn');
+        
+        // محتوای مراحل آموزش
+        const tutorialStepsContent = [
+            {
+                title: "به نسخه وب HosseinX خوش آمدید!",
+                content: "این راهنما به شما کمک می‌کند تا با قابلیت‌های اپلیکیشن آشنا شوید."
+            },
+            {
+                title: "بازی کردن",
+                content: "با کلیک روی آیکون بازی 🎮 می‌توانید بازی را شروع کنید و امتیاز کسب کنید."
+            },
+            {
+                title: "راهنما",
+                content: "در هر زمان با کلیک روی دکمه ؟ می‌توانید این راهنما را دوباره مشاهده کنید."
+            }
+        ];
+        
+        // متغیر برای نگهداری گام فعلی آموزش
+        let currentTutorialStep = 0;
+
+        // نمایش یا مخفی کردن راهنمای متنی
+        function toggleTooltip(tooltip, show) {
+            if (show) {
+                tooltip.classList.add('show');
+            } else {
+                tooltip.classList.remove('show');
+            }
+        }
+
+        // پنهان کردن همه راهنماهای متنی
+        function hideAllTooltips() {
+            tooltips.forEach(tooltip => {
+                tooltip.classList.remove('show');
+            });
+        }
+
+        // اضافه کردن رویدادها به آیکون‌های راهنما
+        helpIcons.forEach(icon => {
+            icon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const tooltipId = this.id.replace('HelpIcon', 'Tooltip');
+                const tooltip = document.getElementById(tooltipId);
+                
+                // بستن همه راهنماها
+                hideAllTooltips();
+                
+                // نمایش راهنمای این عنصر
+                if (tooltip) {
+                    toggleTooltip(tooltip, true);
+                    
+                    // بستن راهنما بعد از 3 ثانیه
+                    setTimeout(() => {
+                        toggleTooltip(tooltip, false);
+                    }, 3000);
+                }
+            });
+        });
+
+        // اضافه کردن رویداد کلیک به کل صفحه
+        document.addEventListener('click', function() {
+            hideAllTooltips();
+        });
+
+        // اضافه کردن رویداد به دکمه راهنمای اصلی
+        mainHelpButton.addEventListener('click', function() {
+            // شروع راهنمای گام به گام
+            startTutorial();
+        });
+
+        // تابع شروع آموزش
+        function startTutorial() {
+            currentTutorialStep = 0;
+            updateTutorialContent();
+            tutorialOverlay.classList.add('show');
+        }
+
+        // تابع بروزرسانی محتوای آموزش
+        function updateTutorialContent() {
+            const step = tutorialStepsContent[currentTutorialStep];
+            tutorialContent.innerHTML = `<h2>${step.title}</h2><p>${step.content}</p>`;
+            
+            // بروزرسانی نقاط گام
+            const stepDots = tutorialSteps.querySelectorAll('.step-dot');
+            stepDots.forEach((dot, index) => {
+                if (index === currentTutorialStep) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // رویداد دکمه بعدی
+        nextTutorialBtn.addEventListener('click', function() {
+            currentTutorialStep++;
+            if (currentTutorialStep >= tutorialStepsContent.length) {
+                // پایان آموزش
+                tutorialOverlay.classList.remove('show');
+                currentTutorialStep = 0;
+            } else {
+                updateTutorialContent();
+            }
+        });
+
+        // رویداد دکمه رد کردن
+        skipTutorialBtn.addEventListener('click', function() {
+            tutorialOverlay.classList.remove('show');
+        });
+
+        // نمایش راهنما در اولین بازدید
+        const hasSeenTutorial = localStorage.getItem('hasSeenTutorialWeb');
+        if (!hasSeenTutorial) {
+            // تاخیر کوتاه برای اطمینان از اینکه صفحه کاملاً لود شده
+            setTimeout(() => {
+                startTutorial();
+                localStorage.setItem('hasSeenTutorialWeb', 'true');
+            }, 1000);
+        }
+
+        // انیمیشن پالس برای دکمه راهنما
+        setTimeout(() => {
+            mainHelpButton.classList.add('pulse');
+            
+            // توقف انیمیشن پس از چند ثانیه
+            setTimeout(() => {
+                mainHelpButton.classList.remove('pulse');
+            }, 5000);
+        }, 2000);
+        
+        // شبیه‌سازی اطلاعات کاربر در نسخه وب
+        const testUserId = Math.floor(Math.random() * 1000000);
+        console.log("🆔 شناسه کاربر (شبیه‌سازی شده):", testUserId);
+        console.log("👤 نام کاربر (شبیه‌سازی شده):", "بازیکن وب");
+    </script>
+</body>
+</html>
