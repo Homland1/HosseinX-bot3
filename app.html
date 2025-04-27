@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نسخه مینی‌اپ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+            direction: rtl;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background-color: #2196F3;
+            color: white;
+            font-size: 40px;
+            line-height: 80px;
+            width: 80px;
+            height: 80px;
+            margin: 10px auto;
+            border-radius: 8px;
+        }
+
+        .box {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 200px;
+            border-radius: 8px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>نسخه مینی‌اپ تلگرام</h1>
+    
+    <div class="card">🎮</div>
+    
+    <div class="box">
+        این یک باکس سبز رنگ است
+    </div>
+    
+    <div class="footer">
+        این صفحه در مینی‌اپ تلگرام نمایش داده می‌شود
+    </div>
+
+    <script>
+        // مشخص کردن شرایط اجرا
+        let runningInTelegram = false;
+        
+        // بررسی اجرا در تلگرام
+        try {
+            let tg = window.Telegram.WebApp;
+            runningInTelegram = true;
+            console.log("✅ مینی‌اپ در محیط تلگرام اجرا شده است");
+            console.log("📱 نسخه WebApp:", tg.version);
+            console.log("🔍 پلتفرم:", tg.platform || "unknown");
+
+            try {
+                console.log("👤 اطلاعات کاربر:", tg.initDataUnsafe.user);
+            } catch (e) {
+                console.log("👤 اطلاعات کاربر:", "دسترسی ناموفق");
+            }
+
+            // تنظیمات اولیه
+            tg.expand();
+            console.log("📏 گسترش مینی‌اپ انجام شد");
+            
+            // بررسی اطلاعات کاربر
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const user = tg.initDataUnsafe.user;
+                console.log("🆔 شناسه کاربر:", user.id);
+                console.log("👤 نام کاربر:", user.first_name + (user.last_name ? ' ' + user.last_name : ''));
+            } else {
+                // برای تست
+                console.log("🆔 شناسه کاربر:", Math.floor(Math.random() * 1000000));
+                console.log("👤 نام کاربر:", "بازیکن ناشناس");
+            }
+
+            // اعلام آمادگی به تلگرام
+            tg.ready();
+        } catch (e) {
+            console.log("❌ اجرا در خارج از محیط تلگرام");
+            console.error(e);
+        }
+    </script>
+</body>
+</html>
