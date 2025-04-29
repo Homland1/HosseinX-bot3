@@ -125,16 +125,143 @@
     </style>
 </head>
 <body>
-    <h1>نسخه مینی‌اپ تلگرام</h1>
+    <h1>نسخه مینی‌اپ تلگرام HosseinX4</h1>
     
     <div class="card" id="gameCard">🎮</div>
     
+    <style>
+        .characters-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .character {
+            width: 80px;
+            height: 100px;
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .character:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .character .emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .character .name {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .achievements {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .achievement {
+            width: 80px;
+            height: 100px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #eee;
+        }
+        
+        .achievement-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-title {
+            font-size: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        h2 {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+    
+    <h2>شخصیت‌های بازی</h2>
+    <div class="characters-container">
+        <div class="character">
+            <div class="emoji">👨‍⚕️</div>
+            <div class="name">پزشک</div>
+        </div>
+        <div class="character">
+            <div class="emoji">👩‍⚕️</div>
+            <div class="name">پرستار</div>
+        </div>
+        <div class="character">
+            <div class="emoji">🚑</div>
+            <div class="name">اورژانس</div>
+        </div>
+        <div class="character">
+            <div class="emoji">🔬</div>
+            <div class="name">آزمایشگاه</div>
+        </div>
+        <div class="character">
+            <div class="emoji">🧪</div>
+            <div class="name">داروساز</div>
+        </div>
+        <div class="character">
+            <div class="emoji">🧠</div>
+            <div class="name">روانشناس</div>
+        </div>
+    </div>
+    
+    <h2>دستاوردهای بازی</h2>
+    <div class="achievements">
+        <div class="achievement">
+            <div class="achievement-icon">🏅</div>
+            <div class="achievement-title">مبتدی سلامت</div>
+        </div>
+        <div class="achievement">
+            <div class="achievement-icon">🏆</div>
+            <div class="achievement-title">قهرمان پیشگیری</div>
+        </div>
+        <div class="achievement">
+            <div class="achievement-icon">💯</div>
+            <div class="achievement-title">صد امتیازی</div>
+        </div>
+        <div class="achievement">
+            <div class="achievement-icon">🏃‍♂️</div>
+            <div class="achievement-title">ورزشکار</div>
+        </div>
+    </div>
+    
     <div class="box" id="infoBox">
-        این یک باکس سبز رنگ است
+        با انتخاب شخصیت، وظایف روزانه را انجام دهید و توکن دریافت کنید
     </div>
 
     <button class="button" id="sendTokenBtn">
-        <span class="token-icon">🪙</span> سند توکن کاربر
+        <span class="token-icon">🪙</span> دریافت توکن
     </button>
 
     <div class="result-box" id="transactionResult">
@@ -143,7 +270,7 @@
     </div>
     
     <div class="footer">
-        این صفحه در مینی‌اپ تلگرام نمایش داده می‌شود
+        نسخه مینی‌اپ HosseinX4_bot
     </div>
 
     <script>
@@ -274,6 +401,54 @@
             } else {
                 alert("به زودی بازی در اینجا اضافه خواهد شد!");
             }
+        });
+        
+        // اضافه کردن تعامل با شخصیت‌ها
+        document.querySelectorAll('.character').forEach(character => {
+            character.addEventListener('click', function() {
+                // حذف انتخاب از همه شخصیت‌ها
+                document.querySelectorAll('.character').forEach(c => {
+                    c.style.opacity = '0.7';
+                    c.style.transform = 'scale(1)';
+                    c.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                });
+                
+                // انتخاب شخصیت فعلی
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1.1)';
+                this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+                
+                // دریافت نام شخصیت
+                const characterName = this.querySelector('.name').textContent;
+                
+                // نمایش پیام
+                if (runningInTelegram && tg) {
+                    tg.showPopup({
+                        title: "انتخاب شخصیت",
+                        message: `شما شخصیت "${characterName}" را انتخاب کردید. آماده انجام وظایف سلامتی باشید!`,
+                        buttons: [{ type: "ok" }]
+                    });
+                }
+            });
+        });
+        
+        // اضافه کردن تعامل با دستاوردها
+        document.querySelectorAll('.achievement').forEach(achievement => {
+            achievement.addEventListener('click', function() {
+                // دریافت عنوان دستاورد
+                const achievementTitle = this.querySelector('.achievement-title').textContent;
+                
+                // نمایش پیام
+                if (runningInTelegram && tg) {
+                    tg.showPopup({
+                        title: "دستاورد",
+                        message: `دستاورد "${achievementTitle}" هنوز قفل است. با انجام وظایف سلامتی آن را باز کنید.`,
+                        buttons: [{ type: "ok" }]
+                    });
+                } else {
+                    alert(`دستاورد "${achievementTitle}" هنوز قفل است. با انجام وظایف سلامتی آن را باز کنید.`);
+                }
+            });
         });
     </script>
 </body>
